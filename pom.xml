@@ -10,13 +10,30 @@
   <description>Common utilities for java projects that access amazon</description>
 
   <properties>
+    <!-- dependency versions -->
+    <aws-java-sdk.version>1.9.20.1</aws-java-sdk.version>
     <surefire.version>2.19</surefire.version>
+    <!-- test setup properties -->
     <test.output.to.file>true</test.output.to.file>
     <test.exclude.pattern></test.exclude.pattern>
     <surefire.s3tests>org.apache.storm.s3.S3DependentTests</surefire.s3tests>
     <surefire.skipSimpleTests>false</surefire.skipSimpleTests>
     <surefire.skipS3Tests>true</surefire.skipS3Tests>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>${aws-java-sdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <pluginManagement>
