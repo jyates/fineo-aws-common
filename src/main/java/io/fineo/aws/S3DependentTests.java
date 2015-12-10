@@ -17,15 +17,9 @@
 package io.fineo.aws;
 
 /**
- * Marker interface for tests that are dependent on S3 so they can be run separately
- * <p>
- * Tests that have this marker require an ~/.aws/credentials file:
- * <pre>
- * [aws-testing]
- * aws_access_key_id=[ACCESS_KEY]
- * aws_secret_access_key=[SECRET_KEY]
- * </pre>
- * That same user/role also needs to be able to have S3 permissions:
+ * Marker interface for tests that are dependent on S3 so they can be run separately. This should be
+ * used in conjunction with {@link AwsDependentTests}. The user/role from the {@link
+ * AwsDependentTests} should also have the following permissions for S3
  * <ol>
  * <li>CreateBucket</li>
  * <li>PutObject</li>
