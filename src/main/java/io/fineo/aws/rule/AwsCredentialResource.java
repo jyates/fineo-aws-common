@@ -16,34 +16,67 @@
  */
 package io.fineo.aws.rule;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.internal.StaticCredentialsProvider;
-import org.junit.rules.ExternalResource;
-
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.rules.ExternalResource;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Map;
 
 /**
  * Resource to load AWS credentials and get clients to desired services
  */
 public class AwsCredentialResource extends ExternalResource {
 
+  private static final Log LOG = LogFactory.getLog(AwsCredentialResource.class);
+  private String CREDENTIALS = "credentials";
+
   private static final String FAKE_KEY = "AKIAIZFKPYAKBFDZPAEA";
   private static final String FAKE_SECRET = "18S1bF4bpjCKZP2KRgbqOn7xJLDmqmwSXqq5GAWq";
 
   private AmazonS3Client client;
   private TransferManager tx;
-  private ProfileCredentialsProvider provider;
+  private AWSCredentialsProvider provider;
 
 
   public AWSCredentialsProvider getProvider() {
     if (this.provider == null) {
-      this.provider = new ProfileCredentialsProvider("aws-testing");
+      this.provider = new AWSCredentialsProviderChain(getSpecifiedFileCredentials(),
+        new ProfileCredentialsProvider("aws-testing"));
     }
     return this.provider;
+  }
+
+  private AWSCredentialsProvider getSpecifiedFileCredentials() {
+    String credentialsFile = System.getProperty(CREDENTIALS);
+    String key = null;
+    String secret = null;
+    if (credentialsFile != null) {
+      try {
+        FileInputStream is = new FileInputStream(credentialsFile);
+        Yaml yaml = new Yaml();
+        Map<String, String> map = (Map) yaml.load(is);
+        key = map.get("access_key_id");
+        secret = map.get("secrect_access_key");
+      } catch (FileNotFoundException e) {
+        LOG.warn("Invalide credentials file: " + credentialsFile + "! Skipping test. Specify a "
+                 + "credentials file with: -D" + CREDENTIALS);
+      }
+    } else {
+      LOG.warn("Not credentials file set! Specify a credentials file with: -D" + CREDENTIALS);
+    }
+    return new StaticCredentialsProvider(new EmptyAllowedCredentials(key, secret));
   }
 
   /**
@@ -71,5 +104,25 @@ public class AwsCredentialResource extends ExternalResource {
       tx = new TransferManager(getClient());
     }
     return this.tx;
+  }
+
+  private class EmptyAllowedCredentials implements AWSCredentials{
+
+    private final String key, secret;
+
+    public EmptyAllowedCredentials(String key, String secret) {
+      this.key = key;
+      this.secret = secret;
+    }
+
+    @Override
+    public String getAWSAccessKeyId() {
+      return key;
+    }
+
+    @Override
+    public String getAWSSecretKey() {
+      return secret;
+    }
   }
 }
