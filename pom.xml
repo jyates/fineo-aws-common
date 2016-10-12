@@ -13,6 +13,7 @@
     <!-- dependency versions -->
     <aws-java-sdk.version>1.11.38</aws-java-sdk.version>
     <surefire.version>2.19</surefire.version>
+    <slf4j.version>1.7.21</slf4j.version>
     <!-- test setup properties -->
     <test.output.to.file>true</test.output.to.file>
     <test.exclude.pattern></test.exclude.pattern>
@@ -47,6 +48,11 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.16</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
 

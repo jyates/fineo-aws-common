@@ -25,9 +25,9 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.transfer.TransferManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.rules.ExternalResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class AwsCredentialResource extends ExternalResource {
 
-  private static final Log LOG = LogFactory.getLog(AwsCredentialResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AwsCredentialResource.class);
   private String CREDENTIALS = "credentials";
 
   private static final String FAKE_KEY = "AKIAIZFKPYAKBFDZPAEA";
