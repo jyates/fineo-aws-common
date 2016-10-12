@@ -11,7 +11,7 @@
 
   <properties>
     <!-- dependency versions -->
-    <aws-java-sdk.version>1.9.20.1</aws-java-sdk.version>
+    <aws-java-sdk.version>1.11.38</aws-java-sdk.version>
     <surefire.version>2.19</surefire.version>
     <!-- test setup properties -->
     <test.output.to.file>true</test.output.to.file>
@@ -24,7 +24,18 @@
   <dependencies>
     <dependency>
       <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk</artifactId>
+      <artifactId>aws-java-sdk-core</artifactId>
+      <version>${aws-java-sdk.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
       <version>${aws-java-sdk.version}</version>
     </dependency>
     <dependency>
