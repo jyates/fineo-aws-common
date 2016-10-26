@@ -21,6 +21,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -53,7 +54,8 @@ public class AwsCredentialResource extends ExternalResource {
   public AWSCredentialsProvider getProvider() {
     if (this.provider == null) {
       this.provider = new AWSCredentialsProviderChain(getSpecifiedFileCredentials(),
-        new ProfileCredentialsProvider("aws-testing"));
+        new ProfileCredentialsProvider("aws-testing"),
+        new EnvironmentVariableCredentialsProvider());
     }
     return this.provider;
   }
